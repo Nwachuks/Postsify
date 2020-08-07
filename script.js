@@ -7,7 +7,7 @@ let page = 1;
 
 // Fetch posts from API
 async function getPosts() {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${limit}&page=${page}`);
+    const res = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${limit}&_page=${page}`);
     const data = await res.json();
     return data;
 }
@@ -40,10 +40,26 @@ function showLoader() {
 
         setTimeout(() => {
             page++;
-            console.log(page);
             showPosts();
         }, 300);
     }, 1000);
+}
+
+/// FIlter posts by input
+function filterPosts(e) {
+    const term = e.target.value.toUpperCase();
+    const posts = document.querySelectorAll('.post');
+
+    posts.forEach(post => {
+        const title = post.querySelector('.post-title').innerText.toUpperCase();;
+        const body = post.querySelector('.post-body').innerText.toUpperCase();
+
+        if (title.indexOf(term) > -1 || body.indexOf(term) > -1) {
+            post.style.display = 'flex';
+        } else {
+            post.style.display = 'none';
+        }
+    });
 }
 
 // Show initial posts
@@ -56,3 +72,5 @@ window.addEventListener('scroll', () => {
         showLoader();
     }
 });
+
+filter.addEventListener('input', filterPosts);
